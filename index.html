@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>you cool</title>
+
+    <link rel="stylesheet" href="stylesheets/application.css">
+  </head>
+  <body>
+    <div class="input">Choose a song</div>
+    <div class="default">Play default song</div>
+    <ul class="options">
+      <li class="options__item">
+        <label class="options__label" for="resolution">Resolution</label>
+        <input class="options__input" type="range" name="application.resolution" id="resolution" min="3" max="300" step="1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="rotation-speed">Rotation Speed</label>
+        <input class="options__input" type="range" name="application.rotationSpeed" id="rotation-speed" min="0" max="100" step="1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="depth">Depth</label>
+        <input class="options__input" type="range" name="application.depth" id="depth" min="0" max="100" step="1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="spread">Spread</label>
+        <input class="options__input" type="range" name="application.spread" id="spread" min="0" max="100" step="1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="amount">Width</label>
+        <input class="options__input" type="range" name="application.amount" id="amount" min="1" max="2000" step="1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="weight">Weight</label>
+        <input class="options__input" type="range" name="application.weight" id="weight" min="1" max="50" step="1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="persistence">Persistence</label>
+        <input class="options__input" type="range" name="application.persistence" id="persistence" min="0" max="100" step="1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="easing">Ease</label>
+        <input class="options__input" type="range" name="application.easing" id="easing" min="0" max="99" step="0.1" data-type="number">
+      </li>
+
+      <li class="options__item">
+        <label class="options__label" for="fps">FPS</label>
+        <input class="options__input" type="range" name="application.fps" id="fps" min="1" max="120" step="1" data-type="number">
+      </li>
+    </ul>
+    <canvas></canvas>
+
+    <script src="javascripts/file_api.js"></script>
+    <script src="javascripts/simplex-noise.js"></script>
+    <script src="javascripts/application.js"></script>
+
+    <script>application.init()</script>
+  </body>
+</html>

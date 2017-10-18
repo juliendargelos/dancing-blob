@@ -1,0 +1,89 @@
+body {
+  background: #000;
+  margin: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+  color: #fff;
+  font-size: 12px;
+}
+
+input[type="file"] {
+  top: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  transform: translate(-100%, -100%);
+}
+
+.input, .default {
+  left: 15px;
+  height: 17px;
+  border: 2px solid #fff;
+  border-radius: 40px;
+  padding: 10px 15px;
+  user-select: none;
+  cursor: pointer;
+  position: absolute;
+  display: inline-block;
+  line-height: 17px;
+}
+
+.input:active, .default {
+  background: #fff;
+  color: #000;
+}
+
+.input::before, .default::before {
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.input {
+  top: 15px;
+  left: 120px;
+  padding-left: 50px;
+}
+
+.input::before {
+  content: '♫';
+}
+
+.default {
+  top: 15px;
+}
+
+.default::before {
+  content: '▶︎︎';
+}
+
+.options {
+  top: 15px;
+  left: 100%;
+  padding: 0;
+  list-style: none;
+  margin: 0 0 0 -14px;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+.options__item {
+  border: 2px solid #fff;
+  border-radius: 30px;
+  padding: 8px 13px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.options__label {
+  font-size: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: .3em;
+  flex-shrink: 0;
+}
+
+.options__input {
+  flex-shrink: 1;
+}
