@@ -15,7 +15,7 @@ var application = {
   frameRequest: null,
   depth: 40,
   rotationOffset: 0,
-  spread: 80,
+  spread: 40,
   rotationSpeed: 16,
   persistence: 0.8,
   points: [],
@@ -137,7 +137,7 @@ var application = {
         y: Math.sin(alpha + time)
       }
 
-      magnitude = averageMagnitude*(this.spread/10) + this.magnitude(i)*(this.radius/4)*(this.depth/10);
+      magnitude = averageMagnitude*(this.spread/5) + this.magnitude(i)*(this.radius/4)*(this.depth/10);
 
       point.x = point.x * (this.radius + magnitude) + center.x;
       point.y = point.y * (this.radius + magnitude) + center.y;
