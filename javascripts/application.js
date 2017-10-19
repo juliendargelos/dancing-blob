@@ -10,37 +10,42 @@ var application = {
   _fps: 120,
   interval: 0,
   resolution: 7,
-  amount: 1800,
+  amount: 100,
   fileApi: null,
   frameRequest: null,
-  depth: 40,
+  depth: 28,
   rotationOffset: 0,
-  spread: 40,
+  spread: 19,
   rotationSpeed: 16,
   persistence: 0.8,
   points: [],
   easing: 68,
-  weight: 0.08,
+  weight: 0.2,
+  spacing: 63,
+  randomInterval: 5000,
+  randomTime: 0,
   random: false,
+  currentPreset: 0,
 
-  randomness: {
-    resolution: {
-      simplex: new SimplexNoise(),
-      range: [3, 30]
-    },
-    amount: {
-      simplex: new SimplexNoise(),
-      range: [1, 1000]
-    },
-    depth: {
-      simplex: new SimplexNoise(),
-      range: [0, 90]
-    },
-    persistence: {
-      simplex: new SimplexNoise(),
-      range: [70, 100]
-    }
-  },
+  presets: [
+    {resolution:  7, amount: 100, spacing:  63,      depth: 28,      weight: 0.2,    persistence: 0.8    },
+    {resolution: 11, amount:  46, spacing:  59.1927, depth: 26.8282, weight: 1.6409, persistence: 64.5739},
+    {resolution:  7, amount:  33, spacing: 159.7141, depth: 38.3915, weight: 0.5152, persistence: 87.2623},
+    {resolution:  4, amount:  43, spacing: 122.0377, depth: 31.0550, weight: 0.7440, persistence: 83.8282},
+    {resolution: 16, amount:  37, spacing:  65.5285, depth: 45.9127, weight:    0.2, persistence: 74.6503},
+    {resolution: 12, amount:  45, spacing:  82.4651, depth: 49.0072, weight: 0.8403, persistence: 72.8060},
+    {resolution: 13, amount:  37, spacing: 151.4407, depth: 29.0986, weight: 1.1328, persistence: 83.6287},
+    {resolution:  7, amount:   7, spacing: 178.4572, depth: 26.4793, weight: 0.6039, persistence: 53.5809},
+    {resolution:  9, amount:  47, spacing:  47.8694, depth: 47.9567, weight:    0.2, persistence: 72.4018},
+    {resolution: 17, amount:  47, spacing:  65.2955, depth: 25.4018, weight: 1.3376, persistence: 59.1862},
+    {resolution: 11, amount:  42, spacing: 102.5935, depth: 56.0099, weight: 1.7833, persistence: 79.4261},
+    {resolution:  7, amount:  25, spacing: 118.3504, depth: 29.3570, weight: 0.7431, persistence: 59.0169},
+    {resolution: 10, amount:  44, spacing: 123.8507, depth: 33.6181, weight: 1.3464, persistence: 50.3169},
+    {resolution:  8, amount:  48, spacing:  53.1130, depth: 55.3940, weight:    0.2, persistence: 73.6863},
+    {resolution:  9, amount:  37, spacing: 143.1152, depth: 46.6835, weight: 0.5583, persistence: 53.3314},
+    {resolution:  7, amount:  24, spacing: 160.3217, depth: 27.0821, weight:    0.2, persistence: 87.8387},
+    {resolution: 11, amount:  28, spacing: 130.0620, depth: 27.4930, weight: 1.4740, persistence: 69.5935}
+  ],
 
   get fps() {
     return this._fps;
@@ -201,23 +206,22 @@ var application = {
     this.clear();
 
     if(this.random) {
-      var randMin, randMax, options, input;
-      var time = this.time/20000;
-      for(var property in this.randomness) {
-        options = this.randomness[property];
-        randMin = options.range[0];
-        randMax = options.range[1];
-        this[property] = (options.simplex.noise2D(time, time)+1)/2*(randMax - randMin) + randMin;
-
-        input = document.querySelector('[name="application.' + property + '"]');
-        if(input) this.property(input, true);
+      if(this.time - this.randomTime >= this.randomInterval) {
+        this.randomTime = this.time;
+        this.currentPreset = (this.currentPreset + 1)%this.presets.length;
+        var preset = this.presets[this.currentPreset];
+        for(var property in preset) {
+          this[property] = preset[property];
+          input = document.querySelector('[name="application.' + property + '"]');
+          if(input) this.property(input, true);
+        }
       }
     }
 
     var averageMagnitude = Math.pow(this.averageMagnitude(), 4)*(this.radius/30);
-    for(var i = this.amount/10; i >= 0; i--) {
-      if(!Array.isArray(this.points[i*10])) this.points[i*10] = [];
-      this.draw(i*10, averageMagnitude);
+    for(var i = this.amount*this.spacing; i >= 0; i -= this.spacing) {
+      if(!Array.isArray(this.points[i])) this.points[i] = [];
+      this.draw(i, averageMagnitude);
     }
   },
 
@@ -250,7 +254,6 @@ var application = {
           value = parseFloat(value);
           break;
         case 'boolean':
-          console.log(value)
           value = ['true', 'on', '1'].includes((value + '').toLowerCase());
           break;
       }
