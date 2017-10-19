@@ -10,17 +10,37 @@ var application = {
   _fps: 120,
   interval: 0,
   resolution: 7,
-  amount: 1000,
+  amount: 1800,
   fileApi: null,
   frameRequest: null,
-  depth: 30,
+  depth: 40,
   rotationOffset: 0,
-  spread: 70,
+  spread: 80,
   rotationSpeed: 16,
-  persistence: 80,
+  persistence: 0.8,
   points: [],
-  easing: 0,
-  weight: 2,
+  easing: 68,
+  weight: 0.08,
+  random: false,
+
+  randomness: {
+    resolution: {
+      simplex: new SimplexNoise(),
+      range: [3, 30]
+    },
+    amount: {
+      simplex: new SimplexNoise(),
+      range: [1, 1000]
+    },
+    depth: {
+      simplex: new SimplexNoise(),
+      range: [0, 90]
+    },
+    persistence: {
+      simplex: new SimplexNoise(),
+      range: [70, 100]
+    }
+  },
 
   get fps() {
     return this._fps;
@@ -64,13 +84,14 @@ var application = {
     };
   },
 
-  get averageMagnitude() {
+  averageMagnitude: function(from, to) {
     var average = 0;
-    for(var i = 0; i < this.resolution*2; i++) {
-      average += this.fileApi.data[Math.floor(1024 * (i/this.resolution/2))]
-    }
+    from = (from === undefined ? 0 : from)*this.resolution;
+    to = (to === undefined ? 1 : to)*this.resolution;
 
-    return average/this.resolution/200;
+    for(var offset = from; offset < to; offset++) average += this.magnitude(offset, true);
+
+    return average/(to - from);
   },
 
   clear: function(hard) {
@@ -79,15 +100,15 @@ var application = {
     this.context.fillRect(0, 0, this.width, this.height);
   },
 
-  magnitude: function(offset) {
-    return (offset%2 == 0 ? 1 : -1)*this.fileApi.data[Math.floor(1024 * ((offset%this.resolution)/this.resolution))]/100;
+  magnitude: function(offset, absolute) {
+    return (offset%2 == 0 || absolute ? 1 : -1)*this.fileApi.data[Math.floor(1024 * ((offset%this.resolution)/this.resolution))]/100;
   },
 
   draw: function(offset, averageMagnitude) {
     offset = offset || 0;
     var center = this.center;
     var point, alpha, noise;
-    var localTime = (this.time + offset)/3000;
+    var localTime = (this.time + offset)/6000;
     var time = (this.time + offset)/3000;
     var points = [];
     var point;
@@ -122,8 +143,16 @@ var application = {
       point.y = point.y * (this.radius + magnitude) + center.y;
 
       if(previous) {
-        point.x = previous.x + (point.x - previous.x)*((100 - this.easing)/100);
-        point.y = previous.y + (point.y - previous.y)*((100 - this.easing)/100);
+        var easing = (100 - this.easing)/100;
+        var kick = Math.pow(this.easing/100, this.easing/100);
+
+        var delta = {
+          x: point.x - previous.x,
+          y: point.y - previous.y
+        };
+
+        point.x = previous.x + delta.x*(delta.x > 0 ? easing : kick);
+        point.y = previous.y + delta.y*(delta.y > 0 ? easing : kick);
       }
 
       points.push(point);
@@ -170,7 +199,22 @@ var application = {
 
   render: function() {
     this.clear();
-    var averageMagnitude = Math.pow(this.averageMagnitude, 4)*(this.radius/30);
+
+    if(this.random) {
+      var randMin, randMax, options, input;
+      var time = this.time/20000;
+      for(var property in this.randomness) {
+        options = this.randomness[property];
+        randMin = options.range[0];
+        randMax = options.range[1];
+        this[property] = (options.simplex.noise2D(time, time)+1)/2*(randMax - randMin) + randMin;
+
+        input = document.querySelector('[name="application.' + property + '"]');
+        if(input) this.property(input, true);
+      }
+    }
+
+    var averageMagnitude = Math.pow(this.averageMagnitude(), 4)*(this.radius/30);
     for(var i = this.amount/10; i >= 0; i--) {
       if(!Array.isArray(this.points[i*10])) this.points[i*10] = [];
       this.draw(i*10, averageMagnitude);
@@ -187,6 +231,32 @@ var application = {
   resize: function() {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
+    this.radius = (this.width + this.height)/2*0.2;
+  },
+
+  property: function(input, init) {
+    var property = this;
+    var properties = input.name.split('.').slice(1);
+    for(var i = 0; i < properties.length - 1; i++) property = property[properties[i]];
+
+    if(init === true) {
+      input[input.type === 'checkbox' ? 'checked' : 'value'] = property[properties[properties.length - 1]];
+    }
+    else {
+      value = input[input.type === 'checkbox' ? 'checked' : 'value'];
+
+      switch(input.getAttribute('data-type')) {
+        case 'number':
+          value = parseFloat(value);
+          break;
+        case 'boolean':
+          console.log(value)
+          value = ['true', 'on', '1'].includes((value + '').toLowerCase());
+          break;
+      }
+
+      property[properties[properties.length - 1]] = value;
+    }
   },
 
   setOptions: function() {
@@ -195,30 +265,8 @@ var application = {
     var options = document.querySelectorAll('[name^="application."]');
     var option;
 
-    var property = function(input, init) {
-      var property = self;
-      var properties = input.name.split('.').slice(1);
-      for(var i = 0; i < properties.length - 1; i++) property = property[properties[i]];
-
-      if(init === true) input.value = property[properties[properties.length - 1]];
-      else {
-        value = input.value;
-
-        switch(input.getAttribute('data-type')) {
-          case 'number':
-            value = parseFloat(value);
-            break;
-          case 'boolean':
-            value = ['true', 'on', '1'].includes((value + '').toLowerCase());
-            break;
-        }
-
-        property[properties[properties.length - 1]] = value;
-      }
-    };
-
     var change = function() {
-      property(this);
+      self.property(this);
     };
 
     for(var i = 0; i < options.length; i++) {
@@ -227,7 +275,7 @@ var application = {
       option.addEventListener('mousemove', change);
       option.addEventListener('mousedown', change);
       option.addEventListener('mouseup', change);
-      property(option, true);
+      this.property(option, true);
     }
   },
 

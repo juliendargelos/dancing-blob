@@ -32,21 +32,21 @@
 
       <li class="options__item">
         <label class="options__label" for="amount">Width</label>
-        <input class="options__input" type="range" name="application.amount" id="amount" min="1" max="2000" step="1" data-type="number">
+        <input class="options__input" type="range" name="application.amount" id="amount" min="100" max="2000" step="1" data-type="number">
       </li>
 
-      <li class="options__item">
+      <!-- <li class="options__item">
         <label class="options__label" for="weight">Weight</label>
-        <input class="options__input" type="range" name="application.weight" id="weight" min="1" max="50" step="1" data-type="number">
-      </li>
+        <input class="options__input" type="range" name="application.weight" id="weight" min="0.05" max="50" step="0.01" data-type="number">
+      </li> -->
 
       <li class="options__item">
         <label class="options__label" for="persistence">Persistence</label>
-        <input class="options__input" type="range" name="application.persistence" id="persistence" min="0" max="100" step="1" data-type="number">
+        <input class="options__input" type="range" name="application.persistence" id="persistence" min="50" max="95" step="1" data-type="number">
       </li>
 
       <li class="options__item">
-        <label class="options__label" for="easing">Ease</label>
+        <label class="options__label" for="easing">Easing</label>
         <input class="options__input" type="range" name="application.easing" id="easing" min="0" max="99" step="0.1" data-type="number">
       </li>
 
@@ -54,6 +54,11 @@
         <label class="options__label" for="fps">FPS</label>
         <input class="options__input" type="range" name="application.fps" id="fps" min="1" max="120" step="1" data-type="number">
       </li>
+
+      <!-- <li class="options__item">
+        <label class="options__label" for="random">Random</label>
+        <input class="options__input" type="checkbox" name="application.random" id="random" data-type="boolean">
+      </li> -->
     </ul>
     <canvas></canvas>
 
