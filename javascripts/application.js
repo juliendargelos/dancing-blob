@@ -108,7 +108,7 @@ var application = {
     ].join(',') + ')';
 
     for(var i = 0; i < this.resolution; i++) {
-      previous = this.points[i];
+      previous = this.points[offset][i];
       alpha = Math.PI*2/this.resolution * i;
 
       point = {
@@ -165,13 +165,16 @@ var application = {
       this.context.translate(-center.x, -center.y);
     }
 
-    this.points = points;
+    this.points[offset] = points;
   },
 
   render: function() {
     this.clear();
     var averageMagnitude = Math.pow(this.averageMagnitude, 4)*(this.radius/30);
-    for(var i = this.amount/10; i >= 0; i--) this.draw(i*10, averageMagnitude);
+    for(var i = this.amount/10; i >= 0; i--) {
+      if(!Array.isArray(this.points[i*10])) this.points[i*10] = [];
+      this.draw(i*10, averageMagnitude);
+    }
   },
 
   update: function() {
