@@ -14,6 +14,12 @@ body {
   position: relative;
 }*/
 
+/*canvas {
+  transform: translateZ(0);
+  z-index: -1;
+  position: relative;
+}*/
+
 input[type="file"] {
   top: 0;
   left: 0;
@@ -92,5 +98,16 @@ input[type="file"] {
 }
 
 .options__input {
+  display: block;
   flex-shrink: 1;
+  flex-grow: 1;
+}
+
+.hideable {
+  transition: 1s;
+  transform: translateZ(0);
+}
+
+.hideable.hideable--hidden {
+  opacity: 0;
 }
