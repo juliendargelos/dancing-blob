@@ -33,7 +33,7 @@ var application = {
 
   presets: [
     {resolution:  7, amount: 100, spacing:  63,      depth: 28,      weight: 0.2,    persistence: 0      },
-    {resolution: 11, amount: 100, spacing: 100,      depth: 99,      weight: 0.15,   persistence: 70     },
+    {resolution: 11, amount:  90, spacing: 100,      depth: 99,      weight: 0.15,   persistence: 70     },
     {resolution: 20, amount: 100, spacing:  41.5,    depth: 10,      weight: 0.1,    persistence: 75     },
     {resolution: 11, amount:  46, spacing:  59.1927, depth: 26.8282, weight: 1.6409, persistence: 64.5739},
     {resolution:  7, amount:  33, spacing: 159.7141, depth: 38.3915, weight: 0.5152, persistence: 87.2623},
@@ -119,7 +119,7 @@ var application = {
   draw: function(offset, averageMagnitude) {
     offset = offset || 0;
     var center = this.center;
-    var point, alpha, noise;
+    var point, alpha;
     var localTime = (this.time + offset)/6000;
     var time = (this.time + offset)/3000;
     var points = [];
