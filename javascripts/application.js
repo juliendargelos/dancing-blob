@@ -330,10 +330,12 @@ var application = {
     var hideOver = false;
 
     var show = function() {
+      document.body.style.cursor = null;
       for(var i = 0; i < self.hideable.length; i++) self.hideable[i].className = self.hideable[i].className.replace(/\bhideable--hidden\b/g, '');
     };
 
     var hide = function() {
+      document.body.style.cursor = 'none';
       for(var i = 0; i < self.hideable.length; i++) self.hideable[i].className += ' hideable--hidden'
     };
 
