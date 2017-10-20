@@ -1,6 +1,6 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
 
-var FileApi = function(onplay, onstop, error) {
+var SoundApi = function(onplay, onstop, error) {
   var self = this;
 
   this.input = document.createElement('input');
@@ -26,8 +26,8 @@ var FileApi = function(onplay, onstop, error) {
   });
 };
 
-FileApi.prototype = {
-  constructor: FileApi,
+SoundApi.prototype = {
+  constructor: SoundApi,
   defaultSound: 'The Pirouettes - Un Mec en Or (Lewis Ofman remix).mp3',
 
   get file() {

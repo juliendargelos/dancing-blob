@@ -11,7 +11,7 @@ var application = {
   interval: 0,
   resolution: 7,
   amount: 100,
-  fileApi: null,
+  soundApi: null,
   frameRequest: null,
   depth: 28,
   rotationOffset: 0,
@@ -105,7 +105,7 @@ var application = {
   },
 
   magnitude: function(offset, absolute) {
-    return (offset%2 == 0 || absolute ? 1 : -1)*this.fileApi.data[Math.floor(1024 * ((offset%this.resolution)/this.resolution))]/100;
+    return (offset%2 == 0 || absolute ? 1 : -1)*this.soundApi.data[Math.floor(1024 * ((offset%this.resolution)/this.resolution))]/100;
   },
 
   draw: function(offset, averageMagnitude) {
@@ -231,7 +231,7 @@ var application = {
 
   update: function() {
     if(this.shouldDraw) {
-      this.fileApi.update();
+      this.soundApi.update();
       this.render();
     }
   },
@@ -299,7 +299,7 @@ var application = {
       self.frameRequest = window.requestAnimationFrame(draw);
     };
 
-    this.fileApi = new FileApi(function() {
+    this.soundApi = new SoundApi(function() {
       self.input.textContent = this.file.name.replace(/^\d+\s/, '').replace(/\.[^\.]+$/, '');
       draw();
     }, function() {
@@ -310,14 +310,14 @@ var application = {
       self.input.textContent = error;
     });
 
-    document.body.appendChild(this.fileApi.input);
+    document.body.appendChild(this.soundApi.input);
 
     document.querySelector('.default').addEventListener('click', function() {
-      self.fileApi.default();
+      self.soundApi.default();
     });
 
     this.input.addEventListener('click', function() {
-      self.fileApi.input.click();
+      self.soundApi.input.click();
     });
 
     this.setOptions();
