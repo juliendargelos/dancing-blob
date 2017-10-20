@@ -119,12 +119,10 @@ var application = {
   draw: function(offset, averageMagnitude) {
     offset = offset || 0;
     var center = this.center;
-    var point, alpha;
     var localTime = (this.time + offset)/6000;
     var time = (this.time + offset)/3000;
     var points = [];
-    var point;
-    var previous;
+    var point, previous, alpha;
 
     this.context.strokeStyle = 'rgb(' + [
       Math.min(255, Math.floor(this.simplex.noise2D(localTime, localTime)*128 + 170)),
@@ -133,7 +131,7 @@ var application = {
     ].join(',') + ')';
 
     for(var i = 0; i < this.resolution; i++) {
-      previous = this.points[offset][i];
+      previous = this.points[offset] ? this.points[offset][i] : undefined;
       alpha = Math.PI*2/this.resolution * i;
 
       point = {
@@ -147,8 +145,9 @@ var application = {
       point.y = point.y * (this.radius + magnitude) + center.y;
 
       if(previous) {
-        var easing = (100 - this.easing)/100;
-        var kick = Math.pow(this.easing/100, this.easing/100);
+        var easing = this.easing/100;
+        var kick = Math.pow(easing, easing);
+        easing = 1 - easing;
 
         var delta = {
           x: point.x - previous.x,
@@ -189,7 +188,6 @@ var application = {
     );
     this.context.closePath();
 
-    this.context.lineWidth = this.weight;
     this.context.stroke();
 
     this.points[offset] = points;
@@ -210,6 +208,8 @@ var application = {
         this.switchPreset();
       }
     }
+
+    this.context.lineWidth = this.weight;
 
     for(var i = this.amount*this.spacing; i >= 0; i -= this.spacing) {
       if(!Array.isArray(this.points[i])) this.points[i] = [];
