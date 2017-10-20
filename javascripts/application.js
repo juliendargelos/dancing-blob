@@ -29,6 +29,7 @@ var application = {
 
   presets: [
     {resolution:  7, amount: 100, spacing:  63,      depth: 28,      weight: 0.2,    persistence: 0.8    },
+    {resolution: 11, amount: 100, spacing:      100, depth:     100, weight: 0.1,    persistence: 70     },
     {resolution: 11, amount:  46, spacing:  59.1927, depth: 26.8282, weight: 1.6409, persistence: 64.5739},
     {resolution:  7, amount:  33, spacing: 159.7141, depth: 38.3915, weight: 0.5152, persistence: 87.2623},
     {resolution:  4, amount:  43, spacing: 122.0377, depth: 31.0550, weight: 0.7440, persistence: 83.8282},
