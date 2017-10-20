@@ -71,11 +71,13 @@ input[type="file"] {
 }
 
 .options {
-  top: 15px;
+  top: 0;
   left: 100%;
-  padding: 0;
+  box-sizing: border-box;
+  max-height: 100vh;
+  padding: 15px 15px 15px 0;
   list-style: none;
-  margin: 0 0 0 -14px;
+  margin: 0;
   position: absolute;
   transform: translateX(-100%);
 }
@@ -87,6 +89,10 @@ input[type="file"] {
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+}
+
+.options__item:last-of-type {
+  margin-bottom: 0;
 }
 
 .options__label {

@@ -226,6 +226,11 @@ var application = {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.radius = (this.width + this.height)/2*0.2;
+
+    var options = document.querySelector('.options');
+
+    if(this.height < options.scrollHeight && options.style.overflow !== 'scroll') options.style.overflow = 'scroll';
+    else if(this.height >= options.scrollHeight && options.style.overflow === 'scroll') options.style.overflow = null;
   },
 
   property: function(input, init) {
