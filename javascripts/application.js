@@ -1,5 +1,3 @@
-window.a = 1;
-
 var application = {
   canvas: document.querySelector('canvas'),
   input: document.querySelector('.input'),
