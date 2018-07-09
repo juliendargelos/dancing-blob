@@ -42,7 +42,7 @@ SoundApi.prototype = {
     else this._file = null;
   },
 
-  default: function() {
+  default: function(callback) {
     var self = this;
 
     var request = new XMLHttpRequest();
@@ -54,7 +54,7 @@ SoundApi.prototype = {
         default: true
       };
 
-      self.decode(request.response);
+      self.decode(request.response, callback);
     });
     request.send();
   },
@@ -70,11 +70,11 @@ SoundApi.prototype = {
     fileReader.readAsArrayBuffer(this.file);
   },
 
-  decode: function(result) {
+  decode: function(result, callback) {
     var self = this;
 
     this.audioContext.decodeAudioData(result, function(buffer) {
-      self.play(buffer);
+      self.play(buffer, callback);
     });
   },
 
@@ -82,7 +82,7 @@ SoundApi.prototype = {
     this.analyser.getByteFrequencyData(this.data);
   },
 
-  play: function(buffer) {
+  play: function(buffer, callback) {
     var self = this;
 
     var audioBufferSouceNode = this.audioContext.createBufferSource();
@@ -107,6 +107,7 @@ SoundApi.prototype = {
       self.stop();
     });
 
+    if(typeof callback === 'function') callback.call(this)
     this.onplay();
   },
 

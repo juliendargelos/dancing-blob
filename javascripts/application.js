@@ -3,6 +3,8 @@ var application = {
   input: document.querySelector('.input'),
   toggler: document.querySelector('.toggler'),
   hideable: document.querySelectorAll('.hideable'),
+  loader: document.querySelector('.loader'),
+  explanations: document.querySelector('.explanations'),
   inputs: {},
   context: null,
   simplex: new SimplexNoise(),
@@ -87,6 +89,30 @@ var application = {
       x: this.width/2,
       y: this.height/2
     };
+  },
+
+  get loading() {
+    return this.loader.className.match(/\bloader--loading\b/) !== null;
+  },
+
+  set loading(v) {
+    v = !!v;
+    if(v !== this.loading) {
+      if(v) this.loader.className = this.loader.className + ' loader--loading';
+      else this.loader.className = this.loader.className.replace(/\bloader--loading\b/, '')
+    }
+  },
+
+  get started() {
+    return this.explanations.className.match(/\bexplanations--hidden\b/);
+  },
+
+  set started(v) {
+    v = !!v;
+    if(v !== this.started) {
+      if(v) this.explanations.className = this.explanations.className + ' explanations--hidden';
+      else this.explanations.className = this.explanations.className.replace(/\bexplanations--hidden\b/, '')
+    }
   },
 
   getInput: function(property) {
@@ -314,10 +340,17 @@ var application = {
     document.body.appendChild(this.soundApi.input);
 
     document.querySelector('.default').addEventListener('click', function() {
-      self.soundApi.default();
+      self.started = true;
+      self.loading = true;
+      self.soundApi.stop()
+
+      self.soundApi.default(function() {
+        self.loading = false;
+      });
     });
 
     this.input.addEventListener('click', function() {
+      self.started = true;
       self.soundApi.input.click();
     });
 
